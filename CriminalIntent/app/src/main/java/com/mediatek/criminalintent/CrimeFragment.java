@@ -2,7 +2,6 @@ package com.mediatek.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +21,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import java.sql.BatchUpdateException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -29,6 +30,7 @@ public class CrimeFragment extends Fragment {
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
+    private Button mReportButton;
 
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String EXTRA_CRIME_TITLE = "crime_index";
@@ -100,6 +102,18 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        mReportButton = (Button)v.findViewById(R.id.crime_report);
+        mReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
+                startActivity(intent);
+            }
+        });
+
         return v;
     }
 
@@ -154,6 +168,25 @@ public class CrimeFragment extends Fragment {
         Intent data = new Intent();
         data.putExtra(EXTRA_CRIME_TITLE, CrimeLab.get(getActivity()).getIndex(mCrime.getId()));
         getActivity().setResult(Activity.RESULT_OK, data); //Fragment没有setResult方法，所以需要委托给其托管的activity的setResult方法
+    }
+
+    private String getCrimeReport() {
+        String solvedStr = mCrime.isSolved() ? getString(R.string.crime_report_solved)
+                : getString(R.string.crime_report_unsolved);
+
+        String dateFormat = "EEE, MMM dd";
+        String dateStr = DateFormat.format(dateFormat, mCrime.getDate()).toString();
+
+        String suspect = mCrime.getSuspect();
+        if (suspect == null) {
+            suspect = getString(R.string.crime_report_no_suspect);
+        }
+        else {
+            suspect = getString(R.string.crime_report_suspect, suspect);
+        }
+
+        String report = getString(R.string.crime_report, mCrime.getTitle(), dateStr, solvedStr, suspect);
+        return report;
     }
 
     public static CrimeFragment newInstance(UUID crimeId) {
