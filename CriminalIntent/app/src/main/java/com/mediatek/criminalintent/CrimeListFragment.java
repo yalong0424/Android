@@ -90,6 +90,10 @@ public class CrimeListFragment extends Fragment {
         public int getItemCount() {
             return mCrimes.size();
         }
+
+        public void setCrimes(List<Crime> crimes) {
+            mCrimes = crimes;
+        }
     }
 
     @Override
@@ -203,6 +207,7 @@ public class CrimeListFragment extends Fragment {
             mCrimeRecyclerView.setAdapter(mAdapter);
         }
         else {
+            mAdapter.setCrimes(crimes);
             mAdapter.notifyDataSetChanged(); //通知RecyclerView刷新所有的可见列表项，但是目前只有一个Crime实例会变更，所以不够高效
             //mAdapter.notifyItemChanged();
         }
