@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mediatek.criminalintent">
+    <uses-feature
+        android:name="android:hardware:camera"
+        android:required="false"/>
 
     <application
         android:allowBackup="true"
@@ -25,6 +28,15 @@
             </intent-filter>
             -->
         </activity>
+        <provider
+            android:authorities="com.mediatek.criminalintent.fileprovider"
+            android:name="android.support.v4.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/files"/>
+        </provider>
     </application>
 
 </manifest>

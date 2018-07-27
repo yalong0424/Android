@@ -1,6 +1,7 @@
 package com.mediatek.criminalintent;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,6 +32,26 @@ public class CrimeListFragment extends Fragment {
 
     private int mListRefreshIndex = -1;
     private boolean mSubtitleVisible;
+    private Callbacks mCallbacks;
+
+    /*
+    * Required interface for hosting activity
+    * */
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks)context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitleView;
@@ -60,9 +81,10 @@ public class CrimeListFragment extends Fragment {
         public void onClick(View view) {
             //Toast.makeText(getActivity(), mCrime.getTitle() + "clicked!", Toast.LENGTH_SHORT).show();
             //Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
-            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             //startActivity(intent);
-            startActivityForResult(intent, REQUEST_CRIME);
+            //Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
+            //startActivityForResult(intent, REQUEST_CRIME);
+            mCallbacks.onCrimeSelected(mCrime);
         }
     }
 
@@ -173,8 +195,10 @@ public class CrimeListFragment extends Fragment {
                 Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime); //将新建的Crime实例添加到底层模型层数据源中
 
-                Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
-                startActivity(intent); //启动CrimePagerActivity实例，让用户编辑新创建的Crime记录
+                //Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
+                //startActivity(intent); //启动CrimePagerActivity实例，让用户编辑新创建的Crime记录
+                updateUI();
+                mCallbacks.onCrimeSelected(crime);
                 return true;
             case R.id.show_subtitle:
                 mSubtitleVisible = !mSubtitleVisible;
@@ -198,7 +222,7 @@ public class CrimeListFragment extends Fragment {
         activity.getSupportActionBar().setSubtitle(subtitle);
     }
 
-    private void updateUI() {
+    public void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
 

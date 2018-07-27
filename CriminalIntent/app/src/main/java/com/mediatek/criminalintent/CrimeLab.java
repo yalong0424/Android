@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +20,8 @@ public class CrimeLab {
     //private List<Crime> mCrimes;
     private Context mContext;
     private SQLiteDatabase mDatabase;
+
+    private static final String LOG_TAG_CRIMELAB = "CrimeLab";
 
     private CrimeLab(Context context){
         mContext = context.getApplicationContext();
@@ -130,6 +134,12 @@ public class CrimeLab {
         );
         //return cursor;
         return new CrimeCursorWrapper(cursor);
+    }
+
+    public File getPhotoFile(Crime crime) {
+        File filesDir = mContext.getFilesDir();
+        Log.d(LOG_TAG_CRIMELAB, "Photo File Dir: " + filesDir.toString());
+        return new File(filesDir, crime.getPhotoFileName());
     }
 
     private static ContentValues getContentValues(Crime crime) {
