@@ -1,11 +1,34 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Base.Theme.AppCompat">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <!-- colorPrimary: 工具栏主题色 -->
+        <item name="colorPrimary">@color/red</item>
+        <!-- colorPrimaryDark: 状态栏主题色 -->
+        <item name="colorPrimaryDark">@color/dark_red</item>
+        <!-- colorAccent: colorAccent应该和colorPrimary形成反差效果，主要用于给EditText这样的组件着色 -->
+        <item name="colorAccent">@color/gray</item>
+
+        <!-- 覆盖父类属性：要想知道哪些属性可以覆盖，可以一直追溯父主题的属性。 windowBackground属性来自于Android操作系统，所以需要使用android命名空间 -->
+        <item name="android:windowBackground">@color/green</item>
+        <!-- 通过查找父类主题知道，可以覆盖buttonstyle属性让它指向BeatBoxButton样式，来统一设置应用的按钮样式 -->
+        <item name="buttonStyle">@style/BeatBoxButton</item>
+    </style>
+
+    <!-- self-define BeatBoxButton style -->
+    <style name="BeatBoxButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_beat_box</item>
+    </style>
+
+    <!-- 样式继承:特殊命名方式进行继承，即通过样式命名表示样式继承关系:继承BeatBoxButton颜色样式基础上，再新增字体粗体样式 -->
+    <style name="BeatBoxButton.Strong">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- 样式继承：采用parent属性指定父样式：继承BeatBoxButton颜色样式基础上，新增字体斜体样式 -->
+    <style name="ItalicStrongBeatBoxButton" parent="@style/BeatBoxButton.Strong">
+        <item name="android:textStyle">italic</item>
     </style>
 
 </resources>
