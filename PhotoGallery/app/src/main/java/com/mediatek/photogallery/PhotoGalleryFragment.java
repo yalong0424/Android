@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,12 +18,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SearchView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhotoGalleryFragment extends Fragment {
+public class PhotoGalleryFragment extends VisibleFragment {
     private static final String TAG ="PhotoGalleryFragment";
 
     private RecyclerView mPhotoRecyclerView;
@@ -42,6 +39,12 @@ public class PhotoGalleryFragment extends Fragment {
         setHasOptionsMenu(true);
 
         updateItems();
+
+        /*添加服务启动代码方式一*/
+        //Intent intent = PollService.newIntent(getActivity());
+        //getActivity().startService(intent);
+        /*添加服务启动代码方式二*/
+        //PollService.setServiceAlarm(getActivity(), true);
 
         /* 主线程是一个拥有Handler和Looper的消息循环。主线程上创建的Handler会自动与主线程的Looper相关联。
         * 主线程上创建的Handler也可以传递给另外一个线程，传递出现的Handler与创建它的线程Looper始终保持着联系。
@@ -102,6 +105,7 @@ public class PhotoGalleryFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 Log.d(TAG, "QueryTextSubmit: " + s);
+                QueryPreferences.setStoredQuery(getActivity(), s);
                 updateItems();
                 return true;
             }
@@ -113,10 +117,49 @@ public class PhotoGalleryFragment extends Fragment {
                 return false;
             }
         });
+
+        //用户点击搜索按钮时，SearchView的View.OnClickListener.onClick()方法会被调用
+        //优化点：可以让用户点击搜索按钮展开SearchView时，搜索文本框中就能默认显示已保存的查询字符串。
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String query = QueryPreferences.getStoredQuery(getActivity());
+                searchView.setQuery(query, false);
+            }
+        });
+
+        //依据定时器的开关状态，正确显示menu_item_toggle_polling菜单项的标题文字
+        MenuItem toggleItem = menu.findItem(R.id.menu_item_toggle_polling);
+        if (PollService.isServiceAlarmOn(getActivity())) {
+            toggleItem.setTitle(R.string.stop_polling);
+        }
+        else {
+            toggleItem.setTitle(R.string.start_polling);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_clear:
+                QueryPreferences.setStoredQuery(getActivity(), null);
+                updateItems();
+                return true;
+            case R.id.menu_item_toggle_polling:
+                boolean shouldStartAlarm = !PollService.isServiceAlarmOn(getActivity());
+                PollService.setServiceAlarm(getActivity(), shouldStartAlarm);
+                //菜单项标题等属性发生变更时，需要调用getActivity().invalidateOptionsMenu()方法刷新菜单，
+                //这样，才能正确显示menu_item_toggle_polling菜单项的标题文字
+                getActivity().invalidateOptionsMenu();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void updateItems() {
-        new FetchItemsTask().execute();
+        String query = QueryPreferences.getStoredQuery(getActivity());
+        new FetchItemsTask(query).execute();
     }
 
     private void setupAdapter() {
@@ -179,14 +222,19 @@ public class PhotoGalleryFragment extends Fragment {
     * AsyncTask第三个泛型参数是AsyncTask返回结果的数据类型，也就是DoInBackground(...)方法的返回结果的数据类型，
     * 同时也是onPostExecute(...)方法输入参数的数据类型。*/
     private class FetchItemsTask extends AsyncTask<Void, Void, List<GalleryItem>> {
+        private String mQuery;
+
+        public FetchItemsTask(String query) {
+            mQuery = query;
+        }
+
         @Override
         protected List<GalleryItem> doInBackground(Void... params) {
-            String query = "robot"; //just for testing
-            if (query == null) {
+            if (mQuery == null) {
                 return new FlickrFetcher().fetchRecentPhotos();
             }
             else {
-                return new FlickrFetcher().searchPhotos(query);
+                return new FlickrFetcher().searchPhotos(mQuery);
             }
         }
 

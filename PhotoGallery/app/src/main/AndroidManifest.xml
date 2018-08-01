@@ -2,8 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mediatek.photogallery">
 
+    <!-- 声明自己的使用权限。
+     自定义权限必须知道android:protectionLevel属性值。Android会根据protectionLevel属性值决定自定义权限的使用方式。
+     signature安全级别表明，如果其他应用需要使用你的自定义权限，就必须使用和当前应用相同的key做签名认证。
+     对于仅限应用内部使用的权限，选择signature安全级别比较合适。
+     既然其他开发者没有相同的key，自然也就无法接触到权限保护的东西。-->
+    <permission android:name="com.mediatek.photogallery.PRIVATE"
+        android:protectionLevel="signature"/>
+
     <!-- 获取网络使用权限 配置 -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- StartupReceiver会监听BOOT_COMPLETED操作，而该操作也需要配置使用权限 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- 获取自己声明的使用权限，权限本身只是一行简单的字符串，即使是自定义的权限，也必须在使用这个权限前获取它，这是规则。 -->
+    <uses-permission android:name="com.mediatek.photogallery.PRIVATE"/>
 
     <application
         android:allowBackup="true"
@@ -19,6 +32,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- 服务类似于activity，都能响应intent，因此，必须在AndroidManifest.xml中声明服务 -->
+        <service android:name=".PollService"/>
+        <!-- 和服务与activity一样，broadcast receiver也必须在系统中登记以后才能使用。
+         如果不登记的话，系统就不知道该向那里发送Intent。
+         在配置文件中完成声明后，即使应用还没有运行，只要有匹配的broadcast intent发来，broadcast receiver就会醒来接收。-->
+        <receiver android:name=".StartupReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".NotificationReceiver" android:exported="false">
+            <intent-filter android:priority="-999">
+                <action android:name="com.mediatek.photogallery.SHOW_NOTIFICATION"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
