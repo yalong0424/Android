@@ -32,6 +32,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 对于一些视图层级结构一部分的类，如WebView，VideoView等，Android推荐让activity自己处理
+         设备配置变更。也就是说，无需销毁重建activity，就能让activity直接调整自己的视图以适应新的屏幕尺寸。
+         这样，WebView等组件也就不必重新加载全部数据了。
+        为了让PhotoPageActivity自己处理设备配置变更，可在AndroidManifest.xml配置文件中配置
+        android:configChanges属性，如下的该属性值表明如果因键盘开或关、屏幕方向改变或屏幕大小改变
+         而发生设备配置变更，那么PhotoPageActivity应自己处理配置变更。
+
+         处理设备旋转—设备配置变更问题，有三种方式：
+         1. 使用onSaveInstanceState()方法保存状态：这里由于WebView包含了太多数据，无法在该方法内全部保存，故行不通；
+         2. 保留PhotoPageFragment：因为WebView是视图层级结构的一部分，旋转后它肯定会被销毁重建，所以也行不通；
+         3. 配置AndroidManifest.xml文件，让Activity自己处理设备资源变更：此处就是使用该方案。-->
+        <activity android:name=".PhotoPageActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+
         <!-- 服务类似于activity，都能响应intent，因此，必须在AndroidManifest.xml中声明服务 -->
         <service android:name=".PollService"/>
         <!-- 和服务与activity一样，broadcast receiver也必须在系统中登记以后才能使用。
@@ -42,6 +57,11 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
+
+        <!-- 登记NotificationReceiver并赋予它优先级。
+        要让NotificationReceiver最后一个运行，设置其优先级为-999，这是用户能定义的最低优先级(-1000及以下值是系统保留值)。
+        此外，既然NotificationReceiver仅限PhotoGallery应用内部使用，还需设置一个android:exported="false"，
+        以确保外部应用看不到NotificationReceiver。-->
         <receiver android:name=".NotificationReceiver" android:exported="false">
             <intent-filter android:priority="-999">
                 <action android:name="com.mediatek.photogallery.SHOW_NOTIFICATION"/>

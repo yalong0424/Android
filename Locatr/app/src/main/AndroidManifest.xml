@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mediatek.locatr">
+    <!-- 地理位置定位相关权限有两个：ACCESS_FINE_LOCATION(精准定位) 和 ACCESS_COARSE_LOCATION(非精准定位)。
+    不像INTERNET权限，FINE_LOCATION和COARSE_LOCATION都属于危险型权限。光在manifest中配置还不够安全，
+    还需要运行时请求去用它们。-->
+
+    <!-- 地理位置定位权限：精准定位来自GPS定位仪 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- 地理位置定位权限：非精准定位来自手机基站或Wi-Fi接入点 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- 添加网络使用权限 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".LocatrActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

@@ -1,5 +1,6 @@
 package com.mediatek.photogallery;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -168,12 +169,14 @@ public class PhotoGalleryFragment extends VisibleFragment {
         }
     }
 
-    private class PhotoHolder extends RecyclerView.ViewHolder {
+    private class PhotoHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private ImageView mItemImageView;
+        private GalleryItem mGalleryItem;
 
         public PhotoHolder(View view) {
             super(view);
             mItemImageView = (ImageView) view.findViewById(R.id.item_image_view);
+            itemView.setOnClickListener(this);
         }
 
         public void bindDrawable(Drawable drawable) {
@@ -181,7 +184,18 @@ public class PhotoGalleryFragment extends VisibleFragment {
         }
 
         public void bindGalleryItem(GalleryItem galleryItem) {
-            //
+            mGalleryItem = galleryItem;
+        }
+
+        @Override
+        public void onClick(View view) {
+            //方式一：监听RecyclerView显示项的点击事件，通过隐式Intent启动一个浏览器，实现指定URL的网页浏览
+            //Intent intent = new Intent(Intent.ACTION_VIEW, mGalleryItem.getPhotoPageUri());
+
+            //方式二：弃用隐式Intent，启动PhotoPageActivity，使用WebView在应用内浏览指定网页
+            Intent intent = PhotoPageActivity.newIntent(getActivity(), mGalleryItem.getPhotoPageUri());
+
+            startActivity(intent);
         }
     }
 
@@ -202,6 +216,7 @@ public class PhotoGalleryFragment extends VisibleFragment {
         @Override
         public void onBindViewHolder(PhotoHolder photoHolder, int position) {
             GalleryItem galleryItem = mGalleryItems.get(position);
+            photoHolder.bindGalleryItem(galleryItem);
             //获取res/Drawable目录下的Drawable资源
             Drawable placeholder = getResources().getDrawable(R.drawable.bill_up_close);
             photoHolder.bindDrawable(placeholder);

@@ -49,7 +49,22 @@ public abstract class VisibleFragment extends Fragment {
                     Toast.LENGTH_LONG).show();
             //if we receive this, we're visible, so cancel the notification
             Log.i(TAG, "cancelling notification");
+            /** 普通broadcast intent是单向通信的，只是在概念上同时被所有人接收，而实际上，onReceive()方法是在主线程是调用的，
+             * 所有各个receiver并没有同步并发运行。
+             * 使用有序broadcast intent可以实现双向通信，有序broadcast运行多个broadcast receiver依次处理
+             * broadcast intent，此外，通过传入一个名为result receiver的特别broadcast receiver，有序broadcast还支持
+             * 让broadcast发送者接收broadcast接收者发出的反馈信息。
+             * 在接收方来看，有序broadcast与普通broadcast没有什么不同，。然而，我们却因此获得了特别的工具：
+             一套改变receiver返回值的方法。
+             这里，我们需要取消通知信息。这很简单，使用一个简单的整型结果码，将此要求告诉信息发送者就可以了。
+             具体就是使用setResultCode(int)设置一个Activity.RESULT_CANCELLED结果码
+             来告诉SHOW_NOTIFICATION的发送者应该如何处理通知消息。
+             同时，这个消息也会发送给接收链中的所有broadcast receiver。*/
             setResultCode(Activity.RESULT_CANCELED);
+            /** 使用有序broadcast将广播接收者broadcast receiver发出的返回结果反馈给广播发送者broadcast intent，
+             * 可以使用setResultCode(int)方式，如需返回更多复杂数据，还可以调用setResultData(String)或
+             * setResultExtra(Bundle)方法。如需设置三个参数值，还可以调用setResult(int, String, Bundle).
+             * broadcast receiver设置返回值后，每个后续广播接收者broadcast receiver均可看到或者修改它们。*/
         }
     };
 }

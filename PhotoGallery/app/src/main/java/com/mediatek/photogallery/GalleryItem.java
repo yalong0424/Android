@@ -1,9 +1,13 @@
 package com.mediatek.photogallery;
 
+import android.net.Uri;
+
 public class GalleryItem {
     private String mCaption;
     private String mId;
     private String mUrl;
+    private String mOwner;
+
     @Override
     public String toString() {
         return mCaption;
@@ -31,5 +35,25 @@ public class GalleryItem {
 
     public void setUrl(String url) {
         mUrl = url;
+    }
+
+    public String getOwner() {
+        return mOwner;
+    }
+
+    public void setOwner(String owner) {
+        mOwner = owner;
+    }
+
+    /** 图片URL格式：
+     * http://www.flickr.com/photos/user-id/photo-id
+     * 其中，user-id是JSON数据中的owner属性值,即mOwner;
+     * photo-id是JSON数据中的id属性值，即mId.*/
+    public Uri getPhotoPageUri() {
+        return Uri.parse("http://www.flickr.com/photos/")
+                .buildUpon()
+                .appendPath(mOwner)
+                .appendPath(mId)
+                .build();
     }
 }
