@@ -1,5 +1,6 @@
 package com.mediatek.locatr;
 
+import android.location.Location;
 import android.net.Uri;
 import android.util.Log;
 
@@ -71,6 +72,11 @@ public class FlickrFetcher {
         return downloadGalleryItems(url);
     }
 
+    public List<GalleryItem> searchPhotos(Location location) {
+        String url = buildUrl(location);
+        return downloadGalleryItems(url);
+    }
+
     public List<GalleryItem> downloadGalleryItems(String url) {
         List<GalleryItem> items = new ArrayList<>();
         try {
@@ -104,6 +110,18 @@ public class FlickrFetcher {
             uriBuilder.appendQueryParameter("text", query);
         }
         return uriBuilder.build().toString();
+    }
+
+    /** 实现基于地理位置的Flickr搜索。
+     * 除了常规搜索功能外，还要附加经纬度地理位置信息。
+     * Android定位API是在Location中封装这些地理位置信息的。所以，新写一个buildUrl (...)覆盖方法，
+     * 从传入的Location对象中取出地理位置信息，用以创建我们需要的搜索Url.*/
+    private String buildUrl(Location location) {
+        return ENDPOINT.buildUpon()
+                .appendQueryParameter("method", SEARCH_METHOD)
+                .appendQueryParameter("lat", "" + location.getLatitude())
+                .appendQueryParameter("lon", "" + location.getLongitude())
+                .build().toString();
     }
 
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody)
