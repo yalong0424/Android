@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.mtk14060.auctionclient">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".LoginActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".AuctionClientActivity"
+            android:label="@string/app_name"/>
+        <activity android:name=".ViewItemActivity"
+            android:label="@string/app_name"/>
+        <activity android:name=".ManageKindActivity"
+            android:label="@string/manage_kind"/>
+        <activity android:name=".AddKindActivity"
+            android:label="@string/add_kind_title"/>
+        <activity android:name=".ManageItemActivity"
+            android:label="@string/manage_item"/>
+        <activity android:name=".AddItemActivity"
+            android:label="@string/add_item_title"/>
+        <activity android:name=".ViewBidActivity"
+            android:label="@string/view_bid"/>
+        <activity android:name=".ChooseKindActivity"
+            android:label="@string/choose_kind"/>
+        <activity android:name=".ChooseItemActivity"
+            android:label="@string/app_name"/>
+        <activity android:name=".AddBidActivity"
+            android:label="@string/item_detail_title"/>
+
+    </application>
+
+</manifest>

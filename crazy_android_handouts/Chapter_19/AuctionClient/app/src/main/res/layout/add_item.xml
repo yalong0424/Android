@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_item_title"
+        android:textSize="@dimen/label_font_size"
+        android:gravity="center"
+        android:padding="@dimen/title_padding"/>
+
+    <TableRow>
+        <TextView
+            android:text="@string/item_name"
+            android:textSize="@dimen/label_font_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/itemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="@string/item_desc"
+            android:textSize="@dimen/label_font_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/itemDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="@string/remark"
+            android:textSize="@dimen/label_font_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/itemRemark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="@string/init_price"
+            android:textSize="@dimen/label_font_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/initPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="@string/avail_time"
+            android:textSize="@dimen/label_font_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <!-- 静态指定一个数组作为它的列表项 -->
+        <Spinner
+            android:id="@+id/availTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/availTime"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="@string/item_kind"
+            android:textSize="@dimen/label_font_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <!-- 需要在代码中动态加载所有物品种类作为它的列表项 -->
+        <Spinner
+            android:id="@+id/itemKind"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </TableRow>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <Button
+            android:id="@+id/bnAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add"/>
+        <Button
+            android:id="@+id/bnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"/>
+    </LinearLayout>
+
+</TableLayout>
