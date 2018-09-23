@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.company.jiming.coolweather">
 
+    <!-- 添加访问网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- 将项目的application配置为 org.litepal.LitePalApplication 才可以让LitePal的所有功能都正常工作 -->
     <application
         android:name="org.litepal.LitePalApplication"

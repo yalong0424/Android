@@ -8,6 +8,6 @@
     <list>
         <mapping class="com.company.jiming.coolweather.db.Province" />
         <mapping class="com.company.jiming.coolweather.db.City" />
-        <mapping class="com.company.jiming.coolweather.db.Country" />
+        <mapping class="com.company.jiming.coolweather.db.County" />
     </list>
 </litepal>

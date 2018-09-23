@@ -3,7 +3,7 @@ package com.company.jiming.coolweather.util;
 import android.text.TextUtils;
 
 import com.company.jiming.coolweather.db.City;
-import com.company.jiming.coolweather.db.Country;
+import com.company.jiming.coolweather.db.County;
 import com.company.jiming.coolweather.db.Province;
 
 import org.json.JSONArray;
@@ -78,7 +78,7 @@ public class Utility {
     /**
      * 解析和处理服务器返回的县级数据
      * */
-    public static boolean handleCountryResponce(String response, int cityId)
+    public static boolean handleCountyResponce(String response, int cityId)
     {
         if (!TextUtils.isEmpty(response))
         {
@@ -87,8 +87,8 @@ public class Utility {
                 for (int i = 0; i < allCountries.length(); ++i)
                 {
                     JSONObject countryObject = allCountries.getJSONObject(i);
-                    Country country = new Country();
-                    country.setCountryName(countryObject.getString(COL_NAME));
+                    County country = new County();
+                    country.setCountyName(countryObject.getString(COL_NAME));
                     country.setWeatherId(countryObject.getString(COL_WEATHER_ID));
                     country.setCityId(cityId);
                     country.save(); //将数据存储到数据库中
