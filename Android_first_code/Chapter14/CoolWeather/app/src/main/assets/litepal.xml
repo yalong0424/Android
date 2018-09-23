@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <!-- 配置数据库名称 -->
+    <dbname value="cool_weather"></dbname>
+    <!-- 配置数据库版本号 -->
+    <version value="1"></version>
+    <!-- 指定所有的实体映射模型 -->
+    <list>
+        <mapping class="com.company.jiming.coolweather.db.Province" />
+        <mapping class="com.company.jiming.coolweather.db.City" />
+        <mapping class="com.company.jiming.coolweather.db.Country" />
+    </list>
+</litepal>
